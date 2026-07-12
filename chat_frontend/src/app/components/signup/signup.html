@@ -1,0 +1,35 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Create account</h1>
+      <p>Sign up with your details and optional profile picture.</p>
+    </div>
+    <form (ngSubmit)="onSubmit()" class="auth-form">
+      <label>
+        <span>Name</span>
+        <input type="text" name="name" placeholder="Your name" required [(ngModel)]="name" />
+      </label>
+      <label>
+        <span>Email</span>
+        <input type="email" name="email" placeholder="you@example.com" required [(ngModel)]="email" />
+      </label>
+      <label>
+        <span>Password</span>
+        <input type="password" name="password" placeholder="••••••••" required [(ngModel)]="password" />
+      </label>
+      <label>
+        <span>Confirm Password</span>
+        <input type="password" name="confirmPassword" placeholder="••••••••" required [(ngModel)]="confirmPassword" />
+      </label>
+      <label>
+        <span>Profile picture <span class="optional">(optional)</span></span>
+        <input type="file" name="profilePicture" accept="image/*" (change)="onFileChange($event)" />
+      </label>
+      <button type="submit" class="auth-button">Sign Up</button>
+    </form>
+    <div class="auth-footer">
+      <span>Already have an account?</span>
+      <a routerLink="/login">Sign in</a>
+    </div>
+  </div>
+</div>
