@@ -3,6 +3,8 @@ export interface User {
   name: string;
   avatar: string;
   status: 'online' | 'offline' | 'away';
+  email?: string;
+  password?: string;
 }
 
 export interface Chat {

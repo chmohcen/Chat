@@ -36,6 +36,10 @@ export class ChatService {
     this.markChatAsRead(chat.id);
   }
 
+  updateCurrentUser(user: User): void {
+    this.currentUserSubject.next(user);
+  }
+
   sendMessage(content: string): void {
     const chat = this.selectedChatSubject.value;
     if (!chat) return;

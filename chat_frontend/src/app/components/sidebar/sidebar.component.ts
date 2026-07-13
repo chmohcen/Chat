@@ -5,6 +5,14 @@ import { ChatService } from '../../services/chat.service';
 import { User, Chat } from '../../models/chat.model';
 import { Observable } from 'rxjs';
 
+interface SettingsForm {
+  name: string;
+  email: string;
+  password: string;
+  avatar: string;
+  status: User['status'];
+}
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -18,6 +26,20 @@ export class SidebarComponent implements OnInit {
   filteredChats$: Observable<Chat[]>;
   searchQuery: string = '';
   selectedChatId: string | null = null;
+  isSettingsOpen = false;
+  currentUser: User | null = null;
+  settingsForm: SettingsForm = {
+    name: '',
+    email: '',
+    password: '',
+    avatar: '',
+    status: 'online'
+  };
+  statusOptions: Array<{ value: User['status']; label: string }> = [
+    { value: 'online', label: 'Active' },
+    { value: 'away', label: 'Away' },
+    { value: 'offline', label: 'Offline' }
+  ];
 
   constructor(private chatService: ChatService) {
     this.currentUser$ = this.chatService.currentUser$;
@@ -26,9 +48,15 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initialize selected chat
     this.chatService.selectedChat$.subscribe(chat => {
       this.selectedChatId = chat?.id ?? null;
+    });
+
+    this.chatService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      if (!this.isSettingsOpen) {
+        this.resetSettingsForm(user);
+      }
     });
   }
 
@@ -53,6 +81,62 @@ export class SidebarComponent implements OnInit {
 
   selectChat(chat: Chat): void {
     this.chatService.selectChat(chat);
+  }
+
+  openSettingsModal(): void {
+    if (this.currentUser) {
+      this.resetSettingsForm(this.currentUser);
+    }
+    this.isSettingsOpen = true;
+  }
+
+  closeSettingsModal(): void {
+    this.isSettingsOpen = false;
+  }
+
+  saveSettings(): void {
+    if (!this.currentUser) {
+      return;
+    }
+
+    const updatedUser: User = {
+      ...this.currentUser,
+      name: this.settingsForm.name.trim() || this.currentUser.name,
+      avatar: this.settingsForm.avatar.trim() || this.currentUser.avatar,
+      status: this.settingsForm.status,
+      email: this.settingsForm.email.trim() || this.currentUser.email || '',
+      password: this.settingsForm.password.trim() || this.currentUser.password || ''
+    };
+
+    this.chatService.updateCurrentUser(updatedUser);
+    this.currentUser = updatedUser;
+    this.closeSettingsModal();
+  }
+
+  onAvatarFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        this.settingsForm.avatar = reader.result;
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  private resetSettingsForm(user: User | null): void {
+    this.settingsForm = {
+      name: user?.name ?? '',
+      email: user?.email ?? '',
+      password: user?.password ?? '',
+      avatar: user?.avatar ?? '',
+      status: user?.status ?? 'online'
+    };
   }
 
   getStatusColor(status: string): string {
