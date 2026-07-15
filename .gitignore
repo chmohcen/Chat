@@ -58,6 +58,9 @@ TODO
 # data
 data
 
+# Uploaded media files
+/chat_backend/media/*
+
 notes.md
 
 # cache

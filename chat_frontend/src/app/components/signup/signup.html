@@ -4,28 +4,70 @@
       <h1>Create account</h1>
       <p>Sign up with your details and optional profile picture.</p>
     </div>
-    <form (ngSubmit)="onSubmit()" class="auth-form">
+    <form (ngSubmit)="onSubmit()" class="auth-form" novalidate>
       <label>
         <span>Name</span>
-        <input type="text" name="name" placeholder="Your name" required [(ngModel)]="name" />
+        <input
+          type="text"
+          name="name"
+          placeholder="Your name"
+          required
+          [(ngModel)]="name"
+          [class.input-error]="errors['name']"
+          (input)="clearFieldError('name')"
+        />
+        <small class="field-error" *ngIf="errors['name']">{{ errors['name'] }}</small>
       </label>
       <label>
         <span>Email</span>
-        <input type="email" name="email" placeholder="you@example.com" required [(ngModel)]="email" />
+        <input
+          type="email"
+          name="email"
+          placeholder="you@example.com"
+          required
+          [(ngModel)]="email"
+          [class.input-error]="errors['email']"
+          (input)="clearFieldError('email')"
+        />
+        <small class="field-error" *ngIf="errors['email']">{{ errors['email'] }}</small>
       </label>
       <label>
         <span>Password</span>
-        <input type="password" name="password" placeholder="••••••••" required [(ngModel)]="password" />
+        <input
+          type="password"
+          name="password"
+          placeholder="••••••••"
+          required
+          [(ngModel)]="password"
+          [class.input-error]="errors['password'] || errors['confirmPassword']"
+          (input)="clearFieldError('password')"
+        />
+        <small class="field-error" *ngIf="errors['password']">{{ errors['password'] }}</small>
       </label>
       <label>
         <span>Confirm Password</span>
-        <input type="password" name="confirmPassword" placeholder="••••••••" required [(ngModel)]="confirmPassword" />
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="••••••••"
+          required
+          [(ngModel)]="confirmPassword"
+          [class.input-error]="errors['confirmPassword']"
+          (input)="clearFieldError('confirmPassword')"
+        />
+        <small class="field-error" *ngIf="errors['confirmPassword']">{{ errors['confirmPassword'] }}</small>
       </label>
-      <label>
+      <label class="upload-field">
         <span>Profile picture <span class="optional">(optional)</span></span>
-        <input type="file" name="profilePicture" accept="image/*" (change)="onFileChange($event)" />
+        <div class="upload-box">
+          <span class="upload-label">Picture</span>
+          <input type="file" name="profilePicture" accept="image/*" (change)="onFileChange($event)" />
+        </div>
       </label>
-      <button type="submit" class="auth-button">Sign Up</button>
+
+      <button type="submit" class="auth-button" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Signing up...' : 'Sign Up' }}
+      </button>
     </form>
     <div class="auth-footer">
       <span>Already have an account?</span>

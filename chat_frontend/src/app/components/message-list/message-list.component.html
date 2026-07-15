@@ -3,7 +3,6 @@
     <ng-container *ngFor="let message of messages; let i = index">
       <!-- Timestamp divider for message groups -->
       <div
-        *ngIf="getMessageGroupKey(message, messages[i - 1])"
         class="message-divider"
       >
         <span>{{ message.timestamp | date: 'MMM d, HH:mm' }}</span>
