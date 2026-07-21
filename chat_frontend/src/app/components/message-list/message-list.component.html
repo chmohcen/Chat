@@ -14,8 +14,8 @@
         [class.message--own]="message.isOwn"
         [class.message--other]="!message.isOwn"
       >
-        <div *ngIf="!message.isOwn" class="message__avatar">
-          <img [src]="message.sender.avatar" alt="Avatar">
+        <div *ngIf="!message.isOwn" class="message__picture">
+          <img [src]="message.sender.picture" alt="Picture">
         </div>
 
         <div class="message__content">

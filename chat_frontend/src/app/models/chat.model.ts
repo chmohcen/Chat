@@ -1,7 +1,8 @@
 export interface User {
   id: string;
   name: string;
-  avatar: string;
+  picture: string;
+  final_picture?: string;
   status: 'online' | 'offline' | 'away';
   email?: string;
   password?: string;

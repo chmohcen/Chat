@@ -1,20 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User, Chat, Message } from '../models/chat.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  private currentUserSubject = new BehaviorSubject<User>({
-    id: '1',
-    name: 'You',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=You',
-    status: 'online'
-  });
-  currentUser$ = this.currentUserSubject.asObservable();
-
-  private chatsSubject = new BehaviorSubject<Chat[]>(this.generateMockChats());
+  private chatsSubject = new BehaviorSubject<Chat[]>([]);
   chats$ = this.chatsSubject.asObservable();
 
   private selectedChatSubject = new BehaviorSubject<Chat | null>(null);
@@ -26,7 +19,8 @@ export class ChatService {
   private searchQuerySubject = new BehaviorSubject<string>('');
   searchQuery$ = this.searchQuerySubject.asObservable();
 
-  constructor() {
+  constructor(private authService: AuthService) {
+    this.chatsSubject.next(this.generateMockChats());
     this.selectChat(this.chatsSubject.value[0]);
   }
 
@@ -36,19 +30,14 @@ export class ChatService {
     this.markChatAsRead(chat.id);
   }
 
-  updateCurrentUser(user: User): void {
-    this.currentUserSubject.next(user);
-  }
-
   sendMessage(content: string): void {
     const chat = this.selectedChatSubject.value;
     if (!chat) return;
 
-    const currentUser = this.currentUserSubject.value;
     const newMessage: Message = {
       id: Date.now().toString(),
       chatId: chat.id,
-      sender: currentUser,
+      sender: this.authService.getCurrentUser(),
       content,
       timestamp: new Date(),
       isRead: true,
@@ -99,31 +88,31 @@ export class ChatService {
       {
         id: '2',
         name: 'Sarah Johnson',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
+        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
         status: 'online' as const
       },
       {
         id: '3',
         name: 'Mike Chen',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mike',
+        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mike',
         status: 'offline' as const
       },
       {
         id: '4',
         name: 'Emma Davis',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma',
+        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma',
         status: 'away' as const
       },
       {
         id: '5',
         name: 'Alex Wilson',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
+        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
         status: 'online' as const
       },
       {
         id: '6',
         name: 'Jessica Brown',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jessica',
+        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jessica',
         status: 'online' as const
       }
     ];
@@ -134,12 +123,7 @@ export class ChatService {
       lastMessage: `Hey! How are you doing? ${index > 0 ? 'Last message...' : ''}`,
       lastMessageTime: new Date(Date.now() - index * 3600000),
       unreadCount: index === 0 ? 0 : Math.floor(Math.random() * 3),
-      currentUser: {
-        id: '1',
-        name: 'You',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=You',
-        status: 'online'
-      }
+      currentUser: this.authService.getCurrentUser()
     }));
   }
 
@@ -157,13 +141,13 @@ export class ChatService {
       {
         id: '1',
         name: 'You',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=You',
+        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=You',
         status: 'online'
       },
       {
         id: '2',
         name: 'Sarah Johnson',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
+        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
         status: 'online'
       }
     ];

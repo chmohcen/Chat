@@ -14,12 +14,12 @@
   flex: 1;
 }
 
-.chat-header__avatar-wrapper {
+.chat-header__picture-wrapper {
   position: relative;
   flex-shrink: 0;
 }
 
-.chat-header__avatar {
+.chat-header__picture {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -85,12 +85,16 @@
   }
 }
 
+.header-btn--logout {
+  color: #dc2626;
+}
+
 @media (max-width: 768px) {
   .chat-header {
     padding: 10px 12px;
   }
 
-  .chat-header__avatar {
+  .chat-header__picture {
     width: 36px;
     height: 36px;
   }
