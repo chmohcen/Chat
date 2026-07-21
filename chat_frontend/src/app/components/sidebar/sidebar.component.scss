@@ -11,268 +11,6 @@
   border-right: 1px solid #e5e5ea;
 }
 
-.settings-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgba(17, 24, 39, 0.5);
-  z-index: 1000;
-}
-
-.settings-modal {
-  width: min(100%, 460px);
-  background: linear-gradient(135deg, #ffffff 0%, #f7f7ff 100%);
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 25px 70px rgba(17, 24, 39, 0.24);
-  border: 1px solid #e9e8ff;
-}
-
-.settings-modal__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.settings-modal__eyebrow {
-  margin: 0 0 2px;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #6260ff;
-  font-weight: 700;
-}
-
-.settings-modal__header h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #111827;
-}
-
-.settings-modal__close {
-  border: none;
-  background: #f4f5ff;
-  color: #475569;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.settings-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.settings-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 14px;
-  color: #334155;
-}
-
-.settings-field input[type='text'],
-.settings-field input[type='email'],
-.settings-field input[type='password'],
-.settings-field__upload input[type='text'],
-.settings-field input[type='file'] {
-  width: 100%;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 10px 12px;
-  font-size: 14px;
-  background: #fff;
-}
-
-.settings-field__upload {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.settings-status {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.settings-status__option {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid #e2e8f0;
-  border-radius: 999px;
-  padding: 7px 10px;
-  font-size: 13px;
-  color: #475569;
-  background: #f8f9ff;
-}
-
-.settings-modal__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.settings-modal__cancel,
-.settings-modal__save {
-  border: none;
-  border-radius: 999px;
-  padding: 10px 14px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.settings-modal__cancel {
-  background: #f1f5f9;
-  color: #334155;
-}
-
-.settings-modal__save {
-  background: linear-gradient(135deg, #6260ff 0%, #4f46e5 100%);
-  color: #fff;
-  box-shadow: 0 10px 20px rgba(98, 96, 255, 0.2);
-}
-
-.settings-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgba(17, 24, 39, 0.5);
-  z-index: 1000;
-}
-
-.settings-modal {
-  width: min(100%, 460px);
-  background: linear-gradient(135deg, #ffffff 0%, #f7f7ff 100%);
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 25px 70px rgba(17, 24, 39, 0.24);
-  border: 1px solid #e9e8ff;
-}
-
-.settings-modal__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.settings-modal__eyebrow {
-  margin: 0 0 2px;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #6260ff;
-  font-weight: 700;
-}
-
-.settings-modal__header h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #111827;
-}
-
-.settings-modal__close {
-  border: none;
-  background: #f4f5ff;
-  color: #475569;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.settings-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.settings-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 14px;
-  color: #334155;
-}
-
-.settings-field input[type='text'],
-.settings-field input[type='email'],
-.settings-field input[type='password'],
-.settings-field__upload input[type='text'],
-.settings-field input[type='file'] {
-  width: 100%;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 10px 12px;
-  font-size: 14px;
-  background: #fff;
-}
-
-.settings-field__upload {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.settings-status {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.settings-status__option {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid #e2e8f0;
-  border-radius: 999px;
-  padding: 7px 10px;
-  font-size: 13px;
-  color: #475569;
-  background: #f8f9ff;
-}
-
-.settings-modal__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.settings-modal__cancel,
-.settings-modal__save {
-  border: none;
-  border-radius: 999px;
-  padding: 10px 14px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.settings-modal__cancel {
-  background: #f1f5f9;
-  color: #334155;
-}
-
-.settings-modal__save {
-  background: linear-gradient(135deg, #6260ff 0%, #4f46e5 100%);
-  color: #fff;
-  box-shadow: 0 10px 20px rgba(98, 96, 255, 0.2);
-}
-
 .sidebar__header {
   padding: 16px;
   display: flex;
@@ -283,18 +21,17 @@
 
 .user-profile {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
 
-  &__avatar {
+  &__picture {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
     transition: transform 0.2s ease;
-
-    &:hover {
-      transform: scale(1.05);
-    }
   }
 
   &__status {
@@ -302,10 +39,27 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    bottom: 0;
-    right: 0;
+    left: 28px;
+    bottom: -1px;
     border: 3px solid #fff;
     box-shadow: 0 0 0 1px #e5e5ea;
+  }
+
+  &__name {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    min-height: 40px;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    .user-profile__picture,
+    .user-profile__name {
+      transform: scale(1.05);
+    }
   }
 }
 
@@ -414,12 +168,12 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
-  &__avatar-wrapper {
+  &__picture-wrapper {
     position: relative;
     flex-shrink: 0;
   }
 
-  &__avatar {
+  &__picture {
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -514,7 +268,7 @@
   .chat-item {
     padding: 6px 8px;
 
-    &__avatar {
+    &__picture {
       width: 40px;
       height: 40px;
     }

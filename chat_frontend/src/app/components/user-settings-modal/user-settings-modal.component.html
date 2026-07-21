@@ -1,0 +1,56 @@
+<div class="settings-modal-backdrop" *ngIf="isOpen" (click)="close()">
+  <div class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="user-settings-title" (click)="$event.stopPropagation()">
+    <div class="settings-modal__header">
+      <div>
+        <p class="settings-modal__eyebrow">Profile</p>
+        <h3 id="user-settings-title">User settings</h3>
+      </div>
+      <button type="button" class="settings-modal__close" (click)="close()" aria-label="Close settings">×</button>
+    </div>
+
+    <form class="settings-form" (ngSubmit)="saveSettings()">
+      <label class="settings-field">
+        <span>Name</span>
+        <input type="text" name="name" [(ngModel)]="settingsForm.name" placeholder="Your name" />
+      </label>
+
+      <label class="settings-field">
+        <span>Email</span>
+        <input type="email" name="email" [(ngModel)]="settingsForm.email" placeholder="you@example.com" />
+      </label>
+
+      <label class="settings-field">
+        <span>Picture</span>
+        <label class="settings-picture-picker" for="settings-picture-input">
+          <img
+            [src]="previewPictureUrl"
+            alt="Current profile picture"
+            class="settings-picture-picker__image"
+          />
+          <input id="settings-picture-input" type="file" accept="image/*" (change)="onPictureFileChange($event)" />
+          <span class="settings-picture-picker__hint">Click to change picture</span>
+        </label>
+      </label>
+
+      <label class="settings-field">
+        <span>Password</span>
+        <input type="password" name="password" [(ngModel)]="settingsForm.password" placeholder="New password" />
+      </label>
+
+      <div class="settings-field">
+        <span>Status</span>
+        <div class="settings-status">
+          <label class="settings-status__option" *ngFor="let option of statusOptions">
+            <input type="radio" name="status" [value]="option.value" [(ngModel)]="settingsForm.status" />
+            <span>{{ option.label }}</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-modal__actions">
+        <button type="button" class="settings-modal__cancel" (click)="close()">Cancel</button>
+        <button type="submit" class="settings-modal__save">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

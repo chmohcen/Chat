@@ -1,9 +1,10 @@
 <div class="sidebar">
   <!-- Header -->
   <div class="sidebar__header">
-    <span  class="user-profile" *ngIf="currentUser$ | async as user" (click)="openSettingsModal()">
-      <img [src]="user.avatar" alt="User Avatar" class="user-profile__avatar">
-      <div class="user-profile__status" [style.background-color]="getStatusColor(user.status)"></div>
+    <span class="user-profile" *ngIf="currentUser" (click)="openSettingsModal()">
+      <img [src]="currentUser.final_picture" alt="User picture" class="user-profile__picture">
+      <div class="user-profile__status" [style.background-color]="getStatusColor(currentUser.status)"></div>
+      <span class="user-profile__name">{{ currentUser.name }}</span>
     </span>
     <div class="sidebar__actions">
       <button class="action-btn" title="Start new chat">
@@ -37,8 +38,8 @@
       [class.chat-item--active]="selectedChatId === chat.id"
       (click)="selectChat(chat)"
     >
-      <div class="chat-item__avatar-wrapper">
-        <img [src]="chat.participants[0].avatar" alt="Chat Avatar" class="chat-item__avatar">
+      <div class="chat-item__picture-wrapper">
+        <img [src]="chat.participants[0].picture" alt="Chat picture" class="chat-item__picture">
         <div
           class="chat-item__status"
           [style.background-color]="getStatusColor(chat.participants[0].status)"
@@ -62,54 +63,9 @@
   </div>
 </div>
 
-<div class="settings-modal-backdrop" *ngIf="isSettingsOpen" (click)="closeSettingsModal()">
-  <div class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="user-settings-title" (click)="$event.stopPropagation()">
-    <div class="settings-modal__header">
-      <div>
-        <p class="settings-modal__eyebrow">Profile</p>
-        <h3 id="user-settings-title">User settings</h3>
-      </div>
-      <button type="button" class="settings-modal__close" (click)="closeSettingsModal()" aria-label="Close settings">×</button>
-    </div>
-
-    <form class="settings-form" (ngSubmit)="saveSettings()">
-      <label class="settings-field">
-        <span>Name</span>
-        <input type="text" name="name" [(ngModel)]="settingsForm.name" placeholder="Your name" />
-      </label>
-
-      <label class="settings-field">
-        <span>Email</span>
-        <input type="email" name="email" [(ngModel)]="settingsForm.email" placeholder="you@example.com" />
-      </label>
-
-      <label class="settings-field">
-        <span>Picture</span>
-        <div class="settings-field__upload">
-          <input type="text" name="avatar" [(ngModel)]="settingsForm.avatar" placeholder="Image URL" />
-          <input type="file" accept="image/*" (change)="onAvatarFileChange($event)" />
-        </div>
-      </label>
-
-      <label class="settings-field">
-        <span>Password</span>
-        <input type="password" name="password" [(ngModel)]="settingsForm.password" placeholder="New password" />
-      </label>
-
-      <div class="settings-field">
-        <span>Status</span>
-        <div class="settings-status">
-          <label class="settings-status__option" *ngFor="let option of statusOptions">
-            <input type="radio" name="status" [value]="option.value" [(ngModel)]="settingsForm.status" />
-            <span>{{ option.label }}</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="settings-modal__actions">
-        <button type="button" class="settings-modal__cancel" (click)="closeSettingsModal()">Cancel</button>
-        <button type="submit" class="settings-modal__save">Save</button>
-      </div>
-    </form>
-  </div>
-</div>
+<app-user-settings-modal
+  [isOpen]="isSettingsOpen"
+  [currentUser]="currentUser"
+  (closed)="closeSettingsModal()"
+  (userUpdated)="currentUser = $event"
+></app-user-settings-modal>
