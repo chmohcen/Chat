@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { finalize } from 'rxjs';
+import { finalize, switchMap } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -62,7 +62,10 @@ export class Signup {
   }
 
   onSubmit(): void {
-    this.validateForm();
+    if (!this.validateForm()) {
+      return;
+    }
+
     this.isSubmitting = true;
 
     this.authService.signup({
@@ -71,12 +74,16 @@ export class Signup {
       password: this.password,
       picture: this.profilePicture
     }).pipe(
+      switchMap(() => this.authService.login({
+        email: this.email,
+        password: this.password
+      })),
       finalize(() => {
         this.isSubmitting = false;
       })
     ).subscribe({
       next: () => {
-        this.router.navigateByUrl('/login');
+        this.router.navigateByUrl('/');
       },
       error: (error) => {
         const backendError = error?.error ?? {};

@@ -4,16 +4,36 @@
       <h1>Login</h1>
       <p>Enter your email and password to continue.</p>
     </div>
-    <form (ngSubmit)="onSubmit()" class="auth-form">
+    <form (ngSubmit)="onSubmit()" class="auth-form" novalidate>
       <label>
         <span>Email</span>
-        <input type="email" name="email" placeholder="you@example.com" required [(ngModel)]="email" />
+        <input
+          type="email"
+          name="email"
+          placeholder="you@example.com"
+          required
+          [(ngModel)]="email"
+          [class.input-error]="errors['email']"
+          (input)="clearFieldError('email')"
+        />
+        <small class="field-error" *ngIf="errors['email']">{{ errors['email'] }}</small>
       </label>
       <label>
         <span>Password</span>
-        <input type="password" name="password" placeholder="••••••••" required [(ngModel)]="password" />
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+          [(ngModel)]="password"
+          [class.input-error]="errors['password']"
+          (input)="clearFieldError('password')"
+        />
+        <small class="field-error" *ngIf="errors['password']">{{ errors['password'] }}</small>
       </label>
-      <button type="submit" class="auth-button">Sign In</button>
+      <button type="submit" class="auth-button" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Signing in...' : 'Sign In' }}
+      </button>
     </form>
     <div class="auth-footer">
       <span>Don't have an account?</span>
