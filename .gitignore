@@ -79,3 +79,6 @@ celerybeat-schedule
 .angular
 migrations
 db.sqlite3
+.env
+
+prompt.md
