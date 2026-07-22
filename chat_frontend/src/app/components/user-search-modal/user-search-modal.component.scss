@@ -1,0 +1,150 @@
+.search-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(17, 24, 39, 0.5);
+  z-index: 1000;
+}
+
+.search-modal {
+  width: min(100%, 460px);
+  background: linear-gradient(135deg, #ffffff 0%, #f7f7ff 100%);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 25px 70px rgba(17, 24, 39, 0.24);
+  border: 1px solid #e9e8ff;
+}
+
+.search-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.search-modal__eyebrow {
+  margin: 0 0 2px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6260ff;
+  font-weight: 700;
+}
+
+.search-modal__header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #111827;
+}
+
+.search-modal__close {
+  border: none;
+  background: #f4f5ff;
+  color: #475569;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.search-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: #334155;
+}
+
+.search-modal__field input {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.search-modal__field input:focus {
+  outline: none;
+  border-color: #6260ff;
+  box-shadow: 0 0 0 3px rgba(98, 96, 255, 0.15);
+}
+
+.search-modal__results {
+  margin-top: 12px;
+}
+
+.search-modal__status {
+  margin: 0;
+  padding: 12px 4px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.search-modal__status--error {
+  color: #dc2626;
+}
+
+.search-modal__dropdown {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.search-modal__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.search-modal__user:last-child {
+  border-bottom: none;
+}
+
+.search-modal__user-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.search-modal__user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.search-modal__user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.search-modal__user-email {
+  font-size: 12px;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-modal__user-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}

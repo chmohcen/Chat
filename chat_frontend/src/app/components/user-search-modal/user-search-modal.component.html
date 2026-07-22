@@ -1,0 +1,52 @@
+<div class="search-modal-backdrop" *ngIf="isOpen" (click)="close()">
+  <div
+    class="search-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="user-search-title"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="search-modal__header">
+      <div>
+        <p class="search-modal__eyebrow">New chat</p>
+        <h3 id="user-search-title">Find someone to chat with</h3>
+      </div>
+      <button type="button" class="search-modal__close" (click)="close()" aria-label="Close search">×</button>
+    </div>
+
+    <label class="search-modal__field">
+      <span>Search users</span>
+      <input
+        type="text"
+        name="userSearch"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchInput()"
+        placeholder="Search by name or email"
+        autocomplete="off"
+      />
+    </label>
+
+    <div class="search-modal__results" *ngIf="searchQuery.trim()">
+      <p class="search-modal__status" *ngIf="isLoading">Searching...</p>
+      <p class="search-modal__status search-modal__status--error" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <p class="search-modal__status" *ngIf="!isLoading && !errorMessage && hasSearched && users.length === 0">
+        No users found.
+      </p>
+
+      <ul class="search-modal__dropdown" *ngIf="!isLoading && !errorMessage && users.length > 0">
+        <li class="search-modal__user" *ngFor="let user of users">
+          <img [src]="user.final_picture || user.picture" [alt]="user.name" class="search-modal__user-picture" />
+          <div class="search-modal__user-info">
+            <span class="search-modal__user-name">{{ user.name }}</span>
+            <span class="search-modal__user-email">{{ user.email }}</span>
+          </div>
+          <span
+            class="search-modal__user-status"
+            [style.background-color]="getStatusColor(user.status)"
+            [title]="user.status"
+          ></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

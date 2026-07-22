@@ -1,9 +1,11 @@
-from rest_framework import status, viewsets
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Q
+from rest_framework import status, viewsets
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from .models import User
 from .serializers import UserSerializer
 
@@ -11,6 +13,24 @@ from .serializers import UserSerializer
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
+    def get_queryset(self):
+        queryset = User.objects.all()
+
+        if self.action == 'list':
+            queryset = queryset.exclude(pk=self.request.user.pk)
+            search = self.request.query_params.get('search', '').strip()
+            if search:
+                queryset = queryset.filter(
+                    Q(name__icontains=search) | Q(email__icontains=search)
+                )
+
+        return queryset
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

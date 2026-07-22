@@ -108,3 +108,47 @@ class CurrentUserViewTest(TestCase):
         self.assertEqual(self.user.name, 'Updated Current User')
         self.assertEqual(self.user.email, 'updated@example.com')
         self.assertEqual(self.user.status, 'away')
+
+
+class UserSearchViewTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.current_user = User.objects.create_user(
+            name='Current User',
+            email='current@example.com',
+            password='StrongPass123!',
+        )
+        self.matching_user = User.objects.create_user(
+            name='Sarah Johnson',
+            email='sarah@example.com',
+            password='StrongPass123!',
+        )
+        User.objects.create_user(
+            name='Mike Chen',
+            email='mike@example.com',
+            password='StrongPass123!',
+        )
+
+    def test_user_search_requires_authentication(self):
+        response = self.client.get(reverse('user-list'), {'search': 'Sarah'})
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_user_search_returns_matching_users_and_excludes_current_user(self):
+        self.client.force_authenticate(user=self.current_user)
+
+        response = self.client.get(reverse('user-list'), {'search': 'Sarah'})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['name'], 'Sarah Johnson')
+        self.assertEqual(response.data[0]['email'], 'sarah@example.com')
+
+    def test_user_search_matches_email(self):
+        self.client.force_authenticate(user=self.current_user)
+
+        response = self.client.get(reverse('user-list'), {'search': 'mike@'})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['name'], 'Mike Chen')

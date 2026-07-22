@@ -6,11 +6,12 @@ import { AuthService } from '../../services/auth.service';
 import { User, Chat } from '../../models/chat.model';
 import { Observable } from 'rxjs';
 import { UserSettingsModalComponent } from '../user-settings-modal/user-settings-modal.component';
+import { UserSearchModalComponent } from '../user-search-modal/user-search-modal.component';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, FormsModule, UserSettingsModalComponent],
+  imports: [CommonModule, FormsModule, UserSettingsModalComponent, UserSearchModalComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
@@ -20,6 +21,7 @@ export class SidebarComponent implements OnInit {
   searchQuery = '';
   selectedChatId = null;
   isSettingsOpen = false;
+  isUserSearchOpen = false;
   currentUser: User | null = null;
 
   constructor(
@@ -67,6 +69,14 @@ export class SidebarComponent implements OnInit {
 
   closeSettingsModal(): void {
     this.isSettingsOpen = false;
+  }
+
+  openUserSearchModal(): void {
+    this.isUserSearchOpen = true;
+  }
+
+  closeUserSearchModal(): void {
+    this.isUserSearchOpen = false;
   }
 
   getStatusColor(status: string): string {
