@@ -7,17 +7,19 @@ import { User, Chat } from '../../models/chat.model';
 import { Observable } from 'rxjs';
 import { UserSettingsModalComponent } from '../user-settings-modal/user-settings-modal.component';
 import { UserSearchModalComponent } from '../user-search-modal/user-search-modal.component';
+import { StatusColorPipe } from '../../pipes/status-color.pipe';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, FormsModule, UserSettingsModalComponent, UserSearchModalComponent],
+  imports: [CommonModule, FormsModule, UserSettingsModalComponent, UserSearchModalComponent, StatusColorPipe],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent implements OnInit {
   chats$: Observable<Chat[]>;
   filteredChats$: Observable<Chat[]>;
+  isLoadingMoreChats$: Observable<boolean>;
   searchQuery = '';
   selectedChatId = null;
   isSettingsOpen = false;
@@ -30,6 +32,7 @@ export class SidebarComponent implements OnInit {
   ) {
     this.chats$ = this.chatService.chats$;
     this.filteredChats$ = this.chats$;
+    this.isLoadingMoreChats$ = this.chatService.isLoadingMoreChats$;
   }
 
   ngOnInit(): void {
@@ -38,6 +41,16 @@ export class SidebarComponent implements OnInit {
     });
 
     this.currentUser = this.authService.getCurrentUser();
+  }
+
+  onChatsScroll(event: Event): void {
+    if (this.searchQuery.trim()) return;
+
+    const target = event.target as HTMLElement;
+    const nearBottom = target.scrollHeight - target.scrollTop - target.clientHeight < 150;
+    if (nearBottom) {
+      this.chatService.loadMoreConversations();
+    }
   }
 
   onSearch(query: string): void {
@@ -79,16 +92,9 @@ export class SidebarComponent implements OnInit {
     this.isUserSearchOpen = false;
   }
 
-  getStatusColor(status: string): string {
-    switch (status) {
-      case 'online':
-        return '#31a24c';
-      case 'away':
-        return '#f39c12';
-      case 'offline':
-        return '#95a5a6';
-      default:
-        return '#95a5a6';
-    }
+  onUserSelected(user: User): void {
+    this.chatService.startChatWithUser(user);
+    this.closeUserSearchModal();
   }
+
 }
