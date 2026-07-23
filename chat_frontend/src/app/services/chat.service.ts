@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { User, Chat, Message } from '../models/chat.model';
 import { AuthService } from './auth.service';
+import { MessageService, ConversationDto, MessageDto } from './message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,57 +20,72 @@ export class ChatService {
   private searchQuerySubject = new BehaviorSubject<string>('');
   searchQuery$ = this.searchQuerySubject.asObservable();
 
-  constructor(private authService: AuthService) {
-    this.chatsSubject.next(this.generateMockChats());
-    this.selectChat(this.chatsSubject.value[0]);
+  private hasMoreChatsSubject = new BehaviorSubject<boolean>(false);
+  hasMoreChats$ = this.hasMoreChatsSubject.asObservable();
+
+  private isLoadingMoreChatsSubject = new BehaviorSubject<boolean>(false);
+  isLoadingMoreChats$ = this.isLoadingMoreChatsSubject.asObservable();
+
+  private readonly conversationsPageSize = 20;
+  private conversationsOffset = 0;
+  private isLoadingMoreChats = false;
+
+  constructor(
+    private messageService: MessageService,
+    private authService: AuthService
+  ) {
+    this.loadConversations();
   }
 
   selectChat(chat: Chat): void {
     this.selectedChatSubject.next(chat);
-    this.messagesSubject.next(this.generateMockMessages(chat.id));
+
+    this.messageService.getMessages(chat.participants[0].id).subscribe(dtos => {
+      this.messagesSubject.next(dtos.map(dto => this.toMessage(dto, chat)));
+    });
+
     this.markChatAsRead(chat.id);
+  }
+
+  startChatWithUser(user: User): void {
+    const normalizedUser = this.toUser(user);
+
+    const existing = this.chatsSubject.value.find(chat => chat.participants[0].id === normalizedUser.id);
+    if (existing) {
+      this.selectChat(existing);
+      return;
+    }
+
+    const newChat: Chat = {
+      id: normalizedUser.id,
+      participants: [normalizedUser],
+      lastMessage: '',
+      lastMessageTime: new Date(),
+      unreadCount: 0,
+      currentUser: this.authService.getCurrentUser()
+    };
+
+    this.selectChat(newChat);
   }
 
   sendMessage(content: string): void {
     const chat = this.selectedChatSubject.value;
     if (!chat) return;
 
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      chatId: chat.id,
-      sender: this.authService.getCurrentUser(),
-      content,
-      timestamp: new Date(),
-      isRead: true,
-      isOwn: true
-    };
+    this.messageService.sendMessage(chat.participants[0].id, content).subscribe(dto => {
+      const message = this.toMessage(dto, chat);
+      this.messagesSubject.next([...this.messagesSubject.value, message]);
 
-    const currentMessages = this.messagesSubject.value;
-    this.messagesSubject.next([...currentMessages, newMessage]);
-
-    // Simulate reply
-    setTimeout(() => {
-      const reply: Message = {
-        id: (Date.now() + 1).toString(),
-        chatId: chat.id,
-        sender: chat.participants[0],
-        content: this.generateReply(),
-        timestamp: new Date(),
-        isRead: false,
-        isOwn: false
+      const updatedChat: Chat = {
+        ...chat,
+        lastMessage: message.content,
+        lastMessageTime: message.timestamp
       };
-      this.messagesSubject.next([...this.messagesSubject.value, reply]);
-    }, 1000);
 
-    // Update chat list
-    const updatedChat = {
-      ...chat,
-      lastMessage: content,
-      lastMessageTime: new Date()
-    };
-    const chats = this.chatsSubject.value.map(c => c.id === chat.id ? updatedChat : c);
-    this.chatsSubject.next(chats);
-    this.selectedChatSubject.next(updatedChat);
+      const otherChats = this.chatsSubject.value.filter(c => c.id !== chat.id);
+      this.chatsSubject.next([updatedChat, ...otherChats]);
+      this.selectedChatSubject.next(updatedChat);
+    });
   }
 
   searchChats(query: string): void {
@@ -83,99 +99,67 @@ export class ChatService {
     this.chatsSubject.next(chats);
   }
 
-  private generateMockChats(): Chat[] {
-    const users = [
-      {
-        id: '2',
-        name: 'Sarah Johnson',
-        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
-        status: 'online' as const
-      },
-      {
-        id: '3',
-        name: 'Mike Chen',
-        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mike',
-        status: 'offline' as const
-      },
-      {
-        id: '4',
-        name: 'Emma Davis',
-        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma',
-        status: 'away' as const
-      },
-      {
-        id: '5',
-        name: 'Alex Wilson',
-        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
-        status: 'online' as const
-      },
-      {
-        id: '6',
-        name: 'Jessica Brown',
-        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jessica',
-        status: 'online' as const
-      }
-    ];
+  loadMoreConversations(): void {
+    if (this.isLoadingMoreChats || !this.hasMoreChatsSubject.value) return;
 
-    return users.map((user, index) => ({
-      id: `chat-${index + 1}`,
-      participants: [user],
-      lastMessage: `Hey! How are you doing? ${index > 0 ? 'Last message...' : ''}`,
-      lastMessageTime: new Date(Date.now() - index * 3600000),
-      unreadCount: index === 0 ? 0 : Math.floor(Math.random() * 3),
+    this.isLoadingMoreChats = true;
+    this.isLoadingMoreChatsSubject.next(true);
+    this.messageService.getConversations(this.conversationsOffset, this.conversationsPageSize).subscribe(page => {
+      const newChats = page.results.map(conversation => this.toChat(conversation));
+      this.chatsSubject.next([...this.chatsSubject.value, ...newChats]);
+      this.conversationsOffset += page.results.length;
+      this.hasMoreChatsSubject.next(page.has_more);
+      this.isLoadingMoreChats = false;
+      this.isLoadingMoreChatsSubject.next(false);
+    });
+  }
+
+  private loadConversations(): void {
+    this.messageService.getConversations(0, this.conversationsPageSize).subscribe(page => {
+      const chats = page.results.map(conversation => this.toChat(conversation));
+      this.chatsSubject.next(chats);
+      this.conversationsOffset = page.results.length;
+      this.hasMoreChatsSubject.next(page.has_more);
+
+      if (chats.length > 0 && !this.selectedChatSubject.value) {
+        this.selectChat(chats[0]);
+      }
+    });
+  }
+
+  private toChat(conversation: ConversationDto): Chat {
+    const participant = this.toUser(conversation.user);
+
+    return {
+      id: participant.id,
+      participants: [participant],
+      lastMessage: conversation.last_message.text,
+      lastMessageTime: new Date(conversation.last_message.created_at),
+      unreadCount: conversation.unread_count,
       currentUser: this.authService.getCurrentUser()
-    }));
+    };
   }
 
-  private generateMockMessages(chatId: string): Message[] {
-    const sampleMessages = [
-      'Hey! How are you doing?',
-      'I was just thinking about our project',
-      'Have you checked the latest updates?',
-      'Let\'s catch up soon!',
-      'That sounds great!'
-    ];
-
-    const messages: Message[] = [];
-    const users: User[] = [
-      {
-        id: '1',
-        name: 'You',
-        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=You',
-        status: 'online'
-      },
-      {
-        id: '2',
-        name: 'Sarah Johnson',
-        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
-        status: 'online'
-      }
-    ];
-
-    for (let i = 0; i < 8; i++) {
-      messages.push({
-        id: `msg-${i}`,
-        chatId,
-        sender: users[i % 2],
-        content: sampleMessages[i % sampleMessages.length],
-        timestamp: new Date(Date.now() - (8 - i) * 120000),
-        isRead: true,
-        isOwn: i % 2 === 0
-      });
-    }
-
-    return messages;
+  private toUser(user: User): User {
+    return {
+      ...user,
+      id: String(user.id),
+      picture: user.final_picture || user.picture
+    };
   }
 
-  private generateReply(): string {
-    const replies = [
-      'That\'s awesome! 😊',
-      'Totally agree with you!',
-      'Sounds good to me',
-      'Let\'s do it!',
-      'I like that idea',
-      'Thanks for letting me know!'
-    ];
-    return replies[Math.floor(Math.random() * replies.length)];
+  private toMessage(dto: MessageDto, chat: Chat): Message {
+    const currentUser = this.authService.getCurrentUser();
+    const isOwn = String(dto.sender) === String(currentUser.id);
+
+    return {
+      id: String(dto.id),
+      chatId: chat.id,
+      sender: isOwn ? currentUser : chat.participants[0],
+      content: dto.text,
+      timestamp: new Date(dto.created_at),
+      isRead: dto.is_seen,
+      isOwn
+    };
   }
 }
