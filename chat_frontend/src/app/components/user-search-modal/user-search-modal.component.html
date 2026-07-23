@@ -1,11 +1,6 @@
 <div class="search-modal-backdrop" *ngIf="isOpen" (click)="close()">
-  <div
-    class="search-modal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="user-search-title"
-    (click)="$event.stopPropagation()"
-  >
+  <div class="search-modal" role="dialog" aria-modal="true" aria-labelledby="user-search-title"
+    (click)="$event.stopPropagation()">
     <div class="search-modal__header">
       <div>
         <p class="search-modal__eyebrow">New chat</p>
@@ -16,14 +11,8 @@
 
     <label class="search-modal__field">
       <span>Search users</span>
-      <input
-        type="text"
-        name="userSearch"
-        [(ngModel)]="searchQuery"
-        (input)="onSearchInput()"
-        placeholder="Search by name or email"
-        autocomplete="off"
-      />
+      <input type="text" name="userSearch" [(ngModel)]="searchQuery" (input)="onSearchInput()"
+        placeholder="Search by name or email" autocomplete="off" />
     </label>
 
     <div class="search-modal__results" *ngIf="searchQuery.trim()">
@@ -34,17 +23,15 @@
       </p>
 
       <ul class="search-modal__dropdown" *ngIf="!isLoading && !errorMessage && users.length > 0">
-        <li class="search-modal__user" *ngFor="let user of users">
+        <li class="search-modal__user" *ngFor="let user of users" (click)="selectUser(user)" tabindex="0"
+          role="button" (keydown.enter)="selectUser(user)">
           <img [src]="user.final_picture || user.picture" [alt]="user.name" class="search-modal__user-picture" />
           <div class="search-modal__user-info">
             <span class="search-modal__user-name">{{ user.name }}</span>
             <span class="search-modal__user-email">{{ user.email }}</span>
           </div>
-          <span
-            class="search-modal__user-status"
-            [style.background-color]="getStatusColor(user.status)"
-            [title]="user.status"
-          ></span>
+          <span class="search-modal__user-status" [style.background-color]="user.status | statusColor"
+            [title]="user.status"></span>
         </li>
       </ul>
     </div>

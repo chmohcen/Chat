@@ -4,17 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { Subject, Subscription, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { User } from '../../models/chat.model';
 import { UserService } from '../../services/user.service';
+import { StatusColorPipe } from '../../pipes/status-color.pipe';
 
 @Component({
   selector: 'app-user-search-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, StatusColorPipe],
   templateUrl: './user-search-modal.component.html',
   styleUrl: './user-search-modal.component.scss'
 })
 export class UserSearchModalComponent implements OnChanges, OnDestroy {
   @Input() isOpen = false;
   @Output() closed = new EventEmitter<void>();
+  @Output() userSelected = new EventEmitter<User>();
 
   searchQuery = '';
   users: User[] = [];
@@ -81,17 +83,10 @@ export class UserSearchModalComponent implements OnChanges, OnDestroy {
     this.searchInput$.next(this.searchQuery);
   }
 
-  getStatusColor(status: string): string {
-    switch (status) {
-      case 'online':
-        return '#31a24c';
-      case 'away':
-        return '#f39c12';
-      case 'offline':
-        return '#95a5a6';
-      default:
-        return '#95a5a6';
-    }
+  selectUser(user: User): void {
+    this.userSelected.emit(user);
+    this.resetSearch();
+    this.closed.emit();
   }
 
   private resetSearch(): void {

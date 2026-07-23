@@ -106,10 +106,18 @@
   gap: 12px;
   padding: 12px 14px;
   border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: background 0.15s ease;
 }
 
 .search-modal__user:last-child {
   border-bottom: none;
+}
+
+.search-modal__user:hover,
+.search-modal__user:focus-visible {
+  background: #f4f5ff;
+  outline: none;
 }
 
 .search-modal__user-picture {
