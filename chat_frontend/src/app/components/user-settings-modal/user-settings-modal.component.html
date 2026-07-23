@@ -1,5 +1,6 @@
 <div class="settings-modal-backdrop" *ngIf="isOpen" (click)="close()">
-  <div class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="user-settings-title" (click)="$event.stopPropagation()">
+  <div class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="user-settings-title"
+    (click)="$event.stopPropagation()">
     <div class="settings-modal__header">
       <div>
         <p class="settings-modal__eyebrow">Profile</p>
@@ -22,11 +23,7 @@
       <label class="settings-field">
         <span>Picture</span>
         <label class="settings-picture-picker" for="settings-picture-input">
-          <img
-            [src]="previewPictureUrl"
-            alt="Current profile picture"
-            class="settings-picture-picker__image"
-          />
+          <img [src]="previewPictureUrl" alt="Current profile picture" class="settings-picture-picker__image" />
           <input id="settings-picture-input" type="file" accept="image/*" (change)="onPictureFileChange($event)" />
           <span class="settings-picture-picker__hint">Click to change picture</span>
         </label>

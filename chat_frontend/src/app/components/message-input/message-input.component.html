@@ -6,31 +6,15 @@
 
   <!-- Input Container -->
   <div class="input-container">
-    <button
-      class="action-btn action-btn--emoji"
-      (click)="toggleEmojiPicker()"
-      type="button"
-      title="Add emoji"
-    >
+    <button class="action-btn action-btn--emoji" (click)="toggleEmojiPicker()" type="button" title="Add emoji">
       🙂
     </button>
 
-    <textarea
-      class="message-input"
-      placeholder="Type a message..."
-      [(ngModel)]="messageText"
-      (keypress)="onKeyPress($event)"
-      rows="1"
-    ></textarea>
+    <textarea class="message-input" placeholder="Type a message..." [(ngModel)]="messageText"
+      (keypress)="onKeyPress($event)" rows="1"></textarea>
 
-    <button
-      class="action-btn action-btn--send"
-      (click)="onSendMessage()"
-      (keypress)="onKeyPress($event)"
-      type="button"
-      [disabled]="!messageText.trim()"
-      title="Send message"
-    >
+    <button class="action-btn action-btn--send" (click)="onSendMessage()" (keypress)="onKeyPress($event)" type="button"
+      [disabled]="!messageText.trim()" title="Send message">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
         <path d="M16 3L2 10l14 7 4-14z" />
       </svg>

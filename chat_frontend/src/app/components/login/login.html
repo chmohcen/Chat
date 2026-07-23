@@ -7,28 +7,14 @@
     <form (ngSubmit)="onSubmit()" class="auth-form" novalidate>
       <label>
         <span>Email</span>
-        <input
-          type="email"
-          name="email"
-          placeholder="you@example.com"
-          required
-          [(ngModel)]="email"
-          [class.input-error]="errors['email']"
-          (input)="clearFieldError('email')"
-        />
+        <input type="email" name="email" placeholder="you@example.com" required [(ngModel)]="email"
+          [class.input-error]="errors['email']" (input)="clearFieldError('email')" />
         <small class="field-error" *ngIf="errors['email']">{{ errors['email'] }}</small>
       </label>
       <label>
         <span>Password</span>
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter your password"
-          required
-          [(ngModel)]="password"
-          [class.input-error]="errors['password']"
-          (input)="clearFieldError('password')"
-        />
+        <input type="password" name="password" placeholder="Enter your password" required [(ngModel)]="password"
+          [class.input-error]="errors['password']" (input)="clearFieldError('password')" />
         <small class="field-error" *ngIf="errors['password']">{{ errors['password'] }}</small>
       </label>
       <button type="submit" class="auth-button" [disabled]="isSubmitting">

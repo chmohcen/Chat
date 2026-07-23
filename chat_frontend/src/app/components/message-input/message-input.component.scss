@@ -136,6 +136,7 @@
     opacity: 0;
     transform: translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -146,6 +147,7 @@
   .message-input-area {
     padding: 12px;
   }
+
   .input-container {
     gap: 8px;
   }

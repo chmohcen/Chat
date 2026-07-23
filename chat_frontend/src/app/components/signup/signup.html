@@ -7,54 +7,27 @@
     <form (ngSubmit)="onSubmit()" class="auth-form" novalidate>
       <label>
         <span>Name</span>
-        <input
-          type="text"
-          name="name"
-          placeholder="Your name"
-          required
-          [(ngModel)]="name"
-          [class.input-error]="errors['name']"
-          (input)="clearFieldError('name')"
-        />
+        <input type="text" name="name" placeholder="Your name" required [(ngModel)]="name"
+          [class.input-error]="errors['name']" (input)="clearFieldError('name')" />
         <small class="field-error" *ngIf="errors['name']">{{ errors['name'] }}</small>
       </label>
       <label>
         <span>Email</span>
-        <input
-          type="email"
-          name="email"
-          placeholder="you@example.com"
-          required
-          [(ngModel)]="email"
-          [class.input-error]="errors['email']"
-          (input)="clearFieldError('email')"
-        />
+        <input type="email" name="email" placeholder="you@example.com" required [(ngModel)]="email"
+          [class.input-error]="errors['email']" (input)="clearFieldError('email')" />
         <small class="field-error" *ngIf="errors['email']">{{ errors['email'] }}</small>
       </label>
       <label>
         <span>Password</span>
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter your password"
-          required
-          [(ngModel)]="password"
-          [class.input-error]="errors['password'] || errors['confirmPassword']"
-          (input)="clearFieldError('password')"
-        />
+        <input type="password" name="password" placeholder="Enter your password" required [(ngModel)]="password"
+          [class.input-error]="errors['password'] || errors['confirmPassword']" (input)="clearFieldError('password')" />
         <small class="field-error" *ngIf="errors['password']">{{ errors['password'] }}</small>
       </label>
       <label>
         <span>Confirm Password</span>
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm your password"
-          required
-          [(ngModel)]="confirmPassword"
-          [class.input-error]="errors['confirmPassword']"
-          (input)="clearFieldError('confirmPassword')"
-        />
+        <input type="password" name="confirmPassword" placeholder="Confirm your password" required
+          [(ngModel)]="confirmPassword" [class.input-error]="errors['confirmPassword']"
+          (input)="clearFieldError('confirmPassword')" />
         <small class="field-error" *ngIf="errors['confirmPassword']">{{ errors['confirmPassword'] }}</small>
       </label>
       <label class="upload-field">
