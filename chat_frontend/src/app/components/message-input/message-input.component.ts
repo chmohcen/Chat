@@ -33,7 +33,9 @@ export class MessageInputComponent {
   }
 
   addEmoji(emojiObject: any): void {
-    this.messageText += emojiObject.emoji.native;
+    const emoji = emojiObject.emoji.native;
+    const needsLeadingSpace = this.messageText.length > 0 && !this.messageText.endsWith(' ');
+    this.messageText = `${this.messageText}${needsLeadingSpace ? ' ' : ''}${emoji} `;
     this.showEmojiPicker = false;
   }
 
