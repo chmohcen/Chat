@@ -32,6 +32,36 @@
   gap: 8px;
 }
 
+.messages-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #999;
+  text-align: center;
+  padding: 24px;
+
+  svg {
+    margin-bottom: 8px;
+    color: #ccc;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #666;
+  }
+
+  &__subtitle {
+    margin: 0;
+    font-size: 13px;
+    color: #999;
+  }
+}
+
 .message-divider {
   display: flex;
   align-items: center;
@@ -154,6 +184,7 @@
     opacity: 0;
     transform: translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
